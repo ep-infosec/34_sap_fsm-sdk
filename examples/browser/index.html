@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>SAP Field Service Management SDK - Examples</title>
+</head>
+
+<body>
+
+    <pre id="output"></pre>
+    <script src="https://unpkg.com/fsm-sdk/release/umd/fsm-sdk.bundle"></script>
+    <script>
+
+        const client = new fsm.CoreAPIClient({
+
+            // put your client config here
+            clientIdentifier: '<your-clientIdentifier>',
+            clientSecret: '<your-clientSecret>',
+            clientVersion: '<your-clientVersion>',
+
+            // put your auth config here
+            authAccountName: '<your-authAccountName>',
+            authUserName: '<your-authUserName>',
+            authPassword: '<your-authPassword>'
+
+        });
+
+        (async () => {
+            // select the data we need regarding technicians. It can be filtered by job title and external resource flag
+            const coreSQL = `
+            SELECT
+                unifiedPerson.id,
+                unifiedPerson.userName,
+                unifiedPerson.firstName,
+                unifiedPerson.lastName,
+                unifiedPerson.externalResource,
+                unifiedPerson.jobTitle
+            FROM
+                UnifiedPerson unifiedPerson
+            WHERE
+                unifiedPerson.plannableResource = true
+            `;
+
+            document.querySelectorAll('#output')[0].innerHTML += ['Running:', coreSQL].join('\n') + '\n';
+
+            try {
+
+                const result = await client.query(coreSQL, ['UnifiedPerson']);
+                document.querySelectorAll('#output')[0].innerHTML += 'DATA:\n' + JSON.stringify(result, null, 2);
+
+            } catch (e) {
+
+                document.querySelectorAll('#output')[0].innerHTML += 'ERROR:\n' + JSON.stringify(e.error, null, 2);
+
+            }
+
+        })();
+
+    </script>
+
+</body>
+
+</html>

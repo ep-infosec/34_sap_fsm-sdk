@@ -1,0 +1,108 @@
+{
+  "name": "fsm-sdk",
+  "version": "2.1.1",
+  "description": "Node.JS sdk to interface with SAP Field Service Management APIs.",
+  "readme": "./README.md",
+  "main": "release/index.js",
+  "types": "release/index.d.ts",
+  "scripts": {
+    "prestart": "npm run build",
+    "start": "node release/index.js",
+    "prestart:examples": "npm run build",
+    "start:examples": "node -r dotenv/config examples/node/index.js",
+    "build": "npm run build:node && npm run build:browser",
+    "prebuild:node": "npm run clean",
+    "build:node": "tsc -p . --pretty",
+    "build:browser": "rollup -c",
+    "clean": "rm -rf release",
+    "pretest": "npm run build:browser",
+    "test": "nyc --reporter=lcov --reporter=text --reporter=json-summary mocha --opts mocha.opts",
+    "prepublishOnly": "npm run test && npm run clean && npm run build && npm run start:examples",
+    "tools:update-dto-versions": "./node_modules/.bin/ts-node ./src/test/update-dto-versions.ts"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "SAP Field Service Management SDK",
+    "SAP FSM",
+    "sdk",
+    "nodejs",
+    "lambda",
+    "integration",
+    "customisation",
+    "query-api",
+    "data-api",
+    "batch-api"
+  ],
+  "contributors": [
+    {
+      "name": "Simon Gausmann",
+      "email": "s.gausmann@sap.com",
+      "url": "https://github.com/gausim"
+    }
+  ],
+  "nyc": {
+    "check-coverage": true,
+    "per-file": false,
+    "statements": 90,
+    "branches": 79,
+    "functions": 90,
+    "lines": 90,
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "include": [
+      "**/*.ts"
+    ],
+    "exclude": [
+      "**/*model.ts",
+      "**/test/*.*",
+      "**/*.d.ts",
+      "**/*.js",
+      "**/*.spec.ts",
+      "src/index.ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "all": true,
+    "reporter": [
+      "text-summary",
+      "text",
+      "html",
+      "lcovonly"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sap/fsm-sdk.git"
+  },
+  "author": "SAP SE or an SAP affiliate company - Simon Gausmann",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/sap/fsm-sdk/issues"
+  },
+  "homepage": "https://github.com/sap/fsm-sdk#readme",
+  "dependencies": {
+    "isomorphic-fetch": "^3.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.2",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.9.3",
+    "@types/uuid": "^8.3.0",
+    "coveralls": "^3.1.0",
+    "dotenv": "^10.0.0",
+    "mocha": "^5.2.0",
+    "nyc": "^15.1.0",
+    "puppeteer": "^10.2.0",
+    "rollup": "^2.53.3",
+    "rollup-plugin-filesize": "^9.1.1",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.1"
+  }
+}
